@@ -1,5 +1,5 @@
-# CPP-CMake
-C++ CMake Template
+# Image Segmentation
+Image Segmentation using K-Means Clustering
 
 # Credits
 [stb_image](https://github.com/nothings/stb) Sean Barrett  

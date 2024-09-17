@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <string>
 
 #include "../ext/json/json.hpp"
 #include "colourSpace/ColorSpace.hpp"
@@ -19,15 +20,87 @@ const double Maths::Tau = 6.283185307;
 const double Maths::RadToDeg = 180. / Maths::Pi;
 const double Maths::DegToRad = Maths::Pi / 180.;
 
+std::string GetFileExtension(const std::string loc);
+std::string GetFileNoExtension(const std::string loc);
+
 int main(int argc, char* argv[]) {
-	// ----- ENTER CODE HERE -----
+	if (argc < 3) {
+		Log::WriteOneLine("Drag and drop an image file, and a .json file");
+		Log::WriteOneLine("Note: Only PNG, JPG, BMP or TGA image files are supported");
 
-	Log::WriteOneLine("Hello World!");
+		Log::Save();
+		std::cout << "\nPress enter to exit...\n";
+		std::cin.ignore();
+		return 0;
+	}
 
-	std::cout << "Press enter to exit...\n";
-	std::cin.ignore();
+	std::string imgLoc;
+	bool haveImg = false;
+
+	std::string jsonLoc;
+	bool haveJson = false;
+
+	// ----- GET FILES -----
+
+	for (int i = 1; i < argc; i++) {
+		std::string fileExtension = GetFileExtension(argv[i]);
+
+		if (fileExtension == "json") {
+			jsonLoc = argv[i];
+			haveJson = true;
+		} else if (fileExtension == "png" || fileExtension == "jpg" || fileExtension == "bmp" || fileExtension == "tga") {
+			imgLoc = argv[i];
+			haveImg = true;
+		}
+	}
+
+	if (!(haveImg && haveJson)) {
+		if (!haveImg) Log::WriteOneLine("Image file not found");
+		if (!haveJson) Log::WriteOneLine("JSON file not found");
+
+		Log::Save();
+		std::cout << "\nPress enter to exit...\n";
+		std::cin.ignore();
+		return 0;
+	}
+
+	Log::WriteOneLine("Image: " + imgLoc);
+	Log::WriteOneLine("JSON:  " + jsonLoc);
+	Log::EndLine();
 
 	Log::Save();
 
 	return 0;
+}
+
+std::string GetFileExtension(const std::string loc) {
+	std::stringstream locStream(loc);
+	std::string locSeg;
+	std::vector<std::string> locSegList;
+
+	while (std::getline(locStream, locSeg, '.')) locSegList.push_back(locSeg);
+
+	std::string out = locSegList.back();
+
+	std::transform(out.begin(), out.end(), out.begin(), [](unsigned char c) {
+		return std::tolower(c);
+	});
+
+	return out;
+}
+
+std::string GetFileNoExtension(const std::string loc) {
+	std::stringstream locStream(loc);
+	std::string locSeg;
+	std::vector<std::string> locSegList;
+
+	while (std::getline(locStream, locSeg, '.')) locSegList.push_back(locSeg);
+
+	std::string out = "";
+	for (size_t i = 0; i < locSegList.size() - 1; i++) {
+		if (i != 0) out += ".";
+		out += locSegList[i];
+	}
+
+	return out;
 }

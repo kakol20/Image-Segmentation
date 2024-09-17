@@ -1,4 +1,4 @@
-﻿# CMakeList.txt : CMake project for OkLab Image Processing, include source and define
+﻿# CMakeList.txt : CMake project for Image Segmentation, include source and define
 # project specific logic here.
 #
 cmake_minimum_required (VERSION 3.8)
@@ -9,12 +9,12 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-project ("OkLab Image Processing")
+project ("Image Segmentation")
 
-# set(OkLabImgProc "OkLab Image Processing")
+# set(ImageSegmentation "Image Segmentation")
 
 # Add source to this project's executable.
-add_executable (OkLabImgProc
+add_executable (ImageSegmentation
   "ext/json/json.hpp"
   "ext/stb/stb_image.h"
   "ext/stb/stb_image_write.h"
@@ -25,11 +25,10 @@ add_executable (OkLabImgProc
   "src/image/Image.cpp"
   "src/maths/Maths.hpp"
   "src/other/Log.cpp"
-  "src/main.cpp"
-)
+  "src/main.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET OkLabImgProc PROPERTY CXX_STANDARD 20)
+  set_property(TARGET ImageSegmentation PROPERTY CXX_STANDARD 20)
 endif()
 
 # TODO: Add tests and install targets if needed.

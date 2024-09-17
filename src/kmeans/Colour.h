@@ -39,8 +39,14 @@ public:
 
 	// ----- OTHER -----
 
+	double GetDistance() const { return m_dist; };
 	OkLab GetOkLab() const { return m_lab; };
+	size_t GetCenterIndex() const { return m_centerIndex; };
 	sRGB GetsRGB() const { return m_srgb; };
+	std::string GetRGBUint() const;
+
+	void StartCompare(const OkLab& lab, const size_t index);
+	void Compare(const OkLab& lab, const size_t index);
 
 private:
 	sRGB m_srgb;

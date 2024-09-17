@@ -1,5 +1,7 @@
 #include "Colour.h"
 
+#include "../other/Log.h"
+
 Colour::Colour() {
 	m_centerIndex = 0;
 	m_dist = 0.;
@@ -50,4 +52,22 @@ Colour::Colour(const uint8_t r, const uint8_t g, const uint8_t b) {
 
 	m_srgb = sRGB((double)r / 255., (double)g / 255., (double)b / 255.);
 	m_lab = OkLab::sRGBtoOkLab(m_srgb);
+}
+
+std::string Colour::GetRGBUint() const {
+	return Log::ToString((size_t)m_r, 3, ' ') + " " + Log::ToString((size_t)m_g, 3, ' ') + " " + Log::ToString((size_t)m_b, 3, ' ');
+}
+
+void Colour::StartCompare(const OkLab& lab, const size_t index) {
+	m_centerIndex = index;
+	m_dist = OkLab::Distance(m_lab, lab);
+}
+
+void Colour::Compare(const OkLab& lab, const size_t index) {
+	const double dist = OkLab::Distance(m_lab, lab);
+
+	if (dist < m_dist) {
+		m_centerIndex = index;
+		m_dist = dist;
+	}
 }

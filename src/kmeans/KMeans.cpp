@@ -66,3 +66,33 @@ void KMeans::FirstCenter(const std::vector<Colour>& colours, std::vector<OkLab>&
 		Log::WriteOneLine("Random First Point: rgb(" + colours[randIndex].GetsRGB().UintDebug() + ")");
 	}
 }
+
+void KMeans::SortColours(std::vector<Colour>& colours, const std::vector<OkLab>& centers, const bool debug) {
+	for (size_t i = 0; i < colours.size(); i++) {
+		for (size_t j = 0; j < centers.size(); j++) {
+			if (j == 0) {
+				colours[i].StartCompare(centers[j], j);
+			} else {
+				colours[i].Compare(centers[j], j);
+			}
+		}
+	}
+
+	std::sort(colours.begin(), colours.end(), std::greater<Colour>());
+
+	if (debug) {
+		const unsigned int intPrecision = (std::to_string(colours.size())).size();
+
+		Log::StartLine();
+		Log::Write("  Front Colour: rgb(" + colours.front().GetRGBUint() + "), ");
+		Log::Write("Distance: " + Log::ToString(colours.front().GetDistance()) + ", ");
+		Log::Write("Center Index: " + Log::ToString(colours.front().GetCenterIndex(), intPrecision));
+		Log::EndLine();
+
+		Log::StartLine();
+		Log::Write("  Back Colour : rgb(" + colours.back().GetRGBUint() + "), ");
+		Log::Write("Distance: " + Log::ToString(colours.back().GetDistance()) + ", ");
+		Log::Write("Center Index: " + Log::ToString(colours.back().GetCenterIndex(), intPrecision));
+		Log::EndLine();
+	}
+}

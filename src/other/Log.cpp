@@ -1,9 +1,11 @@
 #include "Log.h"
 
-#include <iostream>
-#include <fstream>
-#include <ctime>
 #include <chrono>
+#include <ctime>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
 
 std::string Log::m_console = "";
 std::chrono::steady_clock::time_point Log::m_time = std::chrono::high_resolution_clock::now();
@@ -103,4 +105,31 @@ bool Log::CheckTime(const long long milliseconds) {
 
 bool Log::CheckTimeSeconds(const double seconds) {
 	return Log::CheckTime((long long)(std::ceil(seconds * 1000)));
+}
+
+std::string Log::ToString(const double value, const unsigned int precision) {
+	std::stringstream out;
+	out << std::fixed << std::setprecision(precision);
+	out << value;
+	return out.str();
+}
+
+std::string Log::ToString(const size_t value, const unsigned int precision, const char lead) {
+	std::string out = std::to_string(value);
+	//return std::to_string(value);
+
+	if (precision > 0) {
+		const int delta = (int)precision - (int)out.size();
+
+		if (delta >= 1) {
+			std::string leading = "";
+			for (int i = 0; i < delta; i++) {
+				leading += lead;
+			}
+
+			out = leading + out;
+		}
+	}
+
+	return out;
 }

@@ -11,6 +11,8 @@ namespace KMeans
 
 	void FirstCenter(const std::vector<Colour>& colours, std::vector<OkLab>& centers);
 
+	void SortColours(std::vector<Colour>& colours, const std::vector<OkLab>& centers, const bool debug = false);
+
 	extern bool TestDebug;
 
 }

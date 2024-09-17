@@ -141,6 +141,8 @@ int main(int argc, char* argv[]) {
 	std::vector<OkLab> centers;
 	KMeans::FirstCenter(colours, centers);
 
+	KMeans::SortColours(colours, centers, true);
+
 	Log::Save();
 
 	return 0;

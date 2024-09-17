@@ -20,6 +20,8 @@ public:
 	static bool CheckTime(const long long milliseconds);
 	static bool CheckTimeSeconds(const double seconds);
 
+	static std::string ToString(const double value, const unsigned int precision = 6);
+	static std::string ToString(const size_t value, const unsigned int precision = 0, const char lead = '0');
 private:
 	static std::string m_console;
 	static std::chrono::steady_clock::time_point m_time;

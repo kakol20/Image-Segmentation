@@ -68,6 +68,46 @@ int main(int argc, char* argv[]) {
 	Log::WriteOneLine("JSON:  " + jsonLoc);
 	Log::EndLine();
 
+	// ----- READ FILES -----
+
+	Image inputImg;
+	if (!inputImg.Read(imgLoc.c_str())) {
+		Log::Save();
+		std::cout << "\nPress enter to exit...\n";
+		std::cin.ignore();
+		return 0;
+	}
+	Log::WriteOneLine("Width: " + std::to_string(inputImg.GetWidth()));
+	Log::WriteOneLine("Height: " + std::to_string(inputImg.GetHeight()));
+	Log::EndLine();
+
+	std::ifstream f(jsonLoc);
+	if (!(f)) {
+		Log::WriteOneLine("Read failed: " + jsonLoc);
+		Log::Save();
+		std::cout << "\nPress enter to exit...\n";
+		std::cin.ignore();
+		return 0;
+	}
+	Log::WriteOneLine("Read success: " + jsonLoc);
+
+	json settings = json::parse(f);
+
+	const bool haveCount = settings.contains("count");
+
+	if (!haveCount) {
+		Log::WriteOneLine("JSON setting not found: count");
+
+		Log::Save();
+		std::cout << "\nPress enter to exit...\n";
+		std::cin.ignore();
+		return 0;
+	}
+
+	const int count = settings["count"];
+
+	Log::WriteOneLine("Count: " + std::to_string(count));
+
 	Log::Save();
 
 	return 0;

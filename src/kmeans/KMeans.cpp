@@ -37,18 +37,13 @@ void KMeans::GetColours(const Image& image, std::vector<Colour>& colours) {
 				double progress = double(image.GetIndex(x, y)) / double(image.GetSize());
 				progress *= 100.;
 
-				std::stringstream outStr;
-				outStr << std::fixed << std::setprecision(6);
-
-				if (progress < 10.) {
-					outStr << " ";
-				}
-				outStr << progress;
+				std::string outStr = Log::ToString(progress, 6);
+				outStr = Log::LeadingCharacter(outStr, 9);
 
 				Log::EndLine();
 				Log::StartLine();
 				Log::Write("  ");
-				Log::Write(outStr.str());
+				Log::Write(outStr);
 				Log::Write("%");
 
 				Log::StartTime();
@@ -63,18 +58,19 @@ void KMeans::FirstCenter(const std::vector<Colour>& colours, std::vector<OkLab>&
 	centers.push_back(colours[randIndex].GetOkLab());
 
 	if (KMeans::TestDebug) {
+		Log::EndLine();
 		Log::WriteOneLine("Random First Point: rgb(" + colours[randIndex].GetsRGB().UintDebug() + ")");
 	}
+}
+
+void KMeans::NewCenter(const std::vector<Colour>& colours, std::vector<OkLab>& centers) {
+	centers.push_back(colours.front().GetOkLab());
 }
 
 void KMeans::SortColours(std::vector<Colour>& colours, const std::vector<OkLab>& centers, const bool debug) {
 	for (size_t i = 0; i < colours.size(); i++) {
 		for (size_t j = 0; j < centers.size(); j++) {
-			if (j == 0) {
-				colours[i].StartCompare(centers[j], j);
-			} else {
-				colours[i].Compare(centers[j], j);
-			}
+			colours[i].Compare(centers[j], j);
 		}
 	}
 
@@ -82,7 +78,8 @@ void KMeans::SortColours(std::vector<Colour>& colours, const std::vector<OkLab>&
 
 	if (debug) {
 		const unsigned int intPrecision = (std::to_string(colours.size())).size();
-
+		//Log::EndLine();
+		
 		Log::StartLine();
 		Log::Write("  Front Colour: rgb(" + colours.front().GetRGBUint() + "), ");
 		Log::Write("Distance: " + Log::ToString(colours.front().GetDistance()) + ", ");

@@ -133,3 +133,20 @@ std::string Log::ToString(const size_t value, const unsigned int precision, cons
 
 	return out;
 }
+
+std::string Log::LeadingCharacter(const std::string value, const unsigned int amount, const char lead) {
+	std::string out = value;
+	if (amount > 0) {
+		const int delta = (int)amount - (int)out.size();
+
+		if (delta >= 1) {
+			std::string leading = "";
+			for (int i = 0; i < delta; i++) {
+				leading += lead;
+			}
+
+			out = leading + out;
+		}
+	}
+	return out;
+}

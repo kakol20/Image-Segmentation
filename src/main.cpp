@@ -134,6 +134,11 @@ int main(int argc, char* argv[]) {
 		TODO: 
 			Save palette file
 		*/
+
+		Log::Save();
+		std::cout << "\nPress enter to exit...\n";
+		std::cin.ignore();
+		return 0;
 	}
 
 	// -- Get Centers --
@@ -141,6 +146,29 @@ int main(int argc, char* argv[]) {
 	std::vector<OkLab> centers;
 	KMeans::FirstCenter(colours, centers);
 
+	KMeans::SortColours(colours, centers, KMeans::TestDebug);
+
+	Log::EndLine();
+	Log::WriteOneLine("Adding centers...");
+	Log::StartTime();
+	for (int i = 1; i < count; i++) {
+		KMeans::NewCenter(colours, centers);
+		KMeans::SortColours(colours, centers, false);
+
+		if (Log::CheckTimeSeconds(5.0)) {
+			const double process = ((double)i / (double)count) * 100;
+			std::string processStr = Log::ToString(process, 6);
+			processStr = Log::LeadingCharacter(processStr, 9);
+
+			Log::WriteOneLine("  " + processStr + "%");
+
+			Log::StartTime();
+		}
+	}
+
+	Log::EndLine();
+	Log::WriteOneLine("Before Movement");
+	Log::WriteOneLine("Centers Count: " + Log::ToString(centers.size()));
 	KMeans::SortColours(colours, centers, true);
 
 	Log::Save();

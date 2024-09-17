@@ -46,7 +46,14 @@ public:
 	std::string GetRGBUint() const;
 
 	void StartCompare(const OkLab& lab, const size_t index);
-	void Compare(const OkLab& lab, const size_t index);
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="lab"></param>
+	/// <param name="index"></param>
+	/// <returns>Returns if changed</returns>
+	bool Compare(const OkLab& lab, const size_t index);
 
 private:
 	sRGB m_srgb;

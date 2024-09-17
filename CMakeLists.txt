@@ -27,6 +27,7 @@ add_executable (ImageSegmentation
   "src/kmeans/KMeans.cpp"
   "src/maths/Maths.hpp"
   "src/other/Log.cpp"
+  "src/other/Random.cpp"
   "src/main.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

@@ -14,6 +14,7 @@
 #include "kmeans/KMeans.h"
 #include "maths/Maths.hpp"
 #include "other/Log.h"
+#include "other/Random.h"
 
 using json = nlohmann::json;
 
@@ -96,9 +97,11 @@ int main(int argc, char* argv[]) {
 	json settings = json::parse(f);
 
 	const bool haveCount = settings.contains("count");
+	const bool haveSeed = settings.contains("seed");
 
-	if (!haveCount) {
-		Log::WriteOneLine("JSON setting not found: count");
+	if (!(haveCount && haveSeed)) {
+		if (!haveCount) Log::WriteOneLine("JSON setting not found: count");
+		if (!haveSeed) Log::WriteOneLine("JSON setting not found: seed");
 
 		Log::Save();
 		std::cout << "\nPress enter to exit...\n";
@@ -107,10 +110,14 @@ int main(int argc, char* argv[]) {
 	}
 
 	const int count = settings["count"];
+	Random::Seed = (unsigned int)settings["seed"];
 
 	Log::WriteOneLine("Count: " + std::to_string(count));
+	Log::WriteOneLine("Seed: " + std::to_string(Random::Seed));
 
 	// ----- MAIN PROCESS -----
+
+	//KMeans::TempDebug = true;
 
 	// -- Get List of Colours
 
@@ -128,6 +135,11 @@ int main(int argc, char* argv[]) {
 			Save palette file
 		*/
 	}
+
+	// -- Get Centers --
+
+	std::vector<OkLab> centers;
+	KMeans::FirstCenter(colours, centers);
 
 	Log::Save();
 

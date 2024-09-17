@@ -6,6 +6,9 @@
 #include <string>
 
 #include "../other/Log.h"
+#include "../other/Random.h"
+
+bool KMeans::TestDebug = true;
 
 void KMeans::GetColours(const Image& image, std::vector<Colour>& colours) {
 	Log::StartTime();
@@ -21,12 +24,8 @@ void KMeans::GetColours(const Image& image, std::vector<Colour>& colours) {
 			const uint8_t g_uint = image.GetData(index + 1);
 			const uint8_t b_uint = image.GetData(index + 2);
 
-			const double r_double = (double)r_uint / 255.;
-			const double g_double = (double)g_uint / 255.;
-			const double b_double = (double)b_uint / 255.;
-
-			const sRGB srgb(r_double, g_double, b_double);
-			const Colour colour(srgb);
+			//const sRGB srgb(r_double, g_double, b_double);
+			const Colour colour(r_uint, g_uint, b_uint);
 
 			if (std::find(colours.begin(), colours.end(), colour) == colours.end()) colours.push_back(colour);
 
@@ -54,8 +53,16 @@ void KMeans::GetColours(const Image& image, std::vector<Colour>& colours) {
 
 				Log::StartTime();
 			}
-
 		}
 	}
 	Log::EndLine();
+}
+
+void KMeans::FirstCenter(const std::vector<Colour>& colours, std::vector<OkLab>& centers) {
+	const unsigned int randIndex = Random::RandUInt(0, colours.size() - 1);
+	centers.push_back(colours[randIndex].GetOkLab());
+
+	if (KMeans::TestDebug) {
+		Log::WriteOneLine("Random First Point: rgb(" + colours[randIndex].GetsRGB().UintDebug() + ")");
+	}
 }

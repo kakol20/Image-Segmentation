@@ -10,6 +10,8 @@
 #include "colourSpace/OkLCh.h"
 #include "colourSpace/sRGB.hpp"
 #include "image/Image.h"
+#include "kmeans/Colour.h"
+#include "kmeans/KMeans.h"
 #include "maths/Maths.hpp"
 #include "other/Log.h"
 
@@ -71,7 +73,7 @@ int main(int argc, char* argv[]) {
 	// ----- READ FILES -----
 
 	Image inputImg;
-	if (!inputImg.Read(imgLoc.c_str())) {
+	if (!inputImg.Read(imgLoc.c_str(), 3)) {
 		Log::Save();
 		std::cout << "\nPress enter to exit...\n";
 		std::cin.ignore();
@@ -107,6 +109,25 @@ int main(int argc, char* argv[]) {
 	const int count = settings["count"];
 
 	Log::WriteOneLine("Count: " + std::to_string(count));
+
+	// ----- MAIN PROCESS -----
+
+	// -- Get List of Colours
+
+	std::vector<Colour> colours;
+
+	KMeans::GetColours(inputImg, colours);
+
+	Log::WriteOneLine("Colour count in image: " + std::to_string(colours.size()));
+
+	if (colours.size() <= count) {
+		Log::WriteOneLine("Colour count is less than or equal to count setting");
+		
+		/*
+		TODO: 
+			Save palette file
+		*/
+	}
 
 	Log::Save();
 

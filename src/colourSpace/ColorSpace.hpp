@@ -26,6 +26,19 @@ public:
 		return *this;
 	}
 
+	// ----- COMPARISON -----
+
+	virtual bool operator==(const ColorSpace& other) const {
+		if (this == &other) return true;
+		return m_a == other.m_a && m_b == other.m_b && m_c == other.m_c;
+	}
+	
+	virtual bool operator!=(const ColorSpace& other) const {
+		return !this->operator==(other);
+	}
+
+	// ----- OTHER -----
+
 	virtual std::string Debug() const {
 		std::stringstream out;
 		out << std::fixed << std::setprecision(4);

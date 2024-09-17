@@ -23,6 +23,8 @@ add_executable (ImageSegmentation
   "src/colourSpace/OkLCh.cpp"
   "src/colourSpace/sRGB.hpp"
   "src/image/Image.cpp"
+  "src/kmeans/Colour.cpp"
+  "src/kmeans/KMeans.cpp"
   "src/maths/Maths.hpp"
   "src/other/Log.cpp"
   "src/main.cpp")

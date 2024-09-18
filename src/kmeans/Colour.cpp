@@ -2,6 +2,8 @@
 
 #include "../other/Log.h"
 
+Colour::SortMode Colour::Mode = Colour::SortMode::DISTANCE;
+
 Colour::Colour() {
 	m_centerIndex = 0;
 	m_dist = 100.;
@@ -9,6 +11,7 @@ Colour::Colour() {
 	m_r = 0;
 	m_g = 0;
 	m_b = 0;
+	m_freq = 0;
 }
 
 Colour::Colour(const sRGB& srgb) {
@@ -21,6 +24,7 @@ Colour::Colour(const sRGB& srgb) {
 	m_r = m_srgb.GetRUInt();
 	m_g = m_srgb.GetGUInt();
 	m_b = m_srgb.GetBUInt();
+	m_freq = 0;
 }
 
 Colour::~Colour() {
@@ -39,6 +43,8 @@ Colour& Colour::operator=(const Colour& other) {
 	m_g = m_srgb.GetGUInt();
 	m_b = m_srgb.GetBUInt();
 
+	m_freq = other.m_freq;
+
 	return *this;
 }
 
@@ -52,6 +58,7 @@ Colour::Colour(const uint8_t r, const uint8_t g, const uint8_t b) {
 
 	m_srgb = sRGB((double)r / 255., (double)g / 255., (double)b / 255.);
 	m_lab = OkLab::sRGBtoOkLab(m_srgb);
+	m_freq = 0;
 }
 
 std::string Colour::GetRGBUint() const {
@@ -75,4 +82,12 @@ bool Colour::Compare(const OkLab& lab, const size_t index) {
 	}
 
 	return changed;
+}
+
+void Colour::AddFrequency() {
+	m_freq += 1;
+}
+
+void Colour::SetSortMode(const Colour::SortMode mode) {
+	Colour::Mode = mode;
 }

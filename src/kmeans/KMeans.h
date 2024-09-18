@@ -7,9 +7,9 @@
 
 namespace KMeans
 {
-	void GetColours(const Image& image, std::vector<Colour>& colours);
+	void GetColours(const Image& image, std::vector<Colour>& colours, const bool removeDupes = true);
 
-	void FirstCenter(const std::vector<Colour>& colours, std::vector<OkLab>& centers);
+	void FirstCenter(std::vector<Colour>& colours, std::vector<OkLab>& centers, const bool random = false);
 	void NewCenter(const std::vector<Colour>& colours, std::vector<OkLab>& centers);
 
 	/// <summary>

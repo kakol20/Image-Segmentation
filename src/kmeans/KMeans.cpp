@@ -11,7 +11,7 @@
 
 bool KMeans::TestDebug = true;
 
-void KMeans::GetColours(const Image& image, std::vector<Colour>& colours) {
+void KMeans::GetColours(const Image& image, std::vector<Colour>& colours, const bool removeDupes) {
 	Log::StartTime();
 
 	Log::EndLine();
@@ -28,9 +28,16 @@ void KMeans::GetColours(const Image& image, std::vector<Colour>& colours) {
 			//const sRGB srgb(r_double, g_double, b_double);
 			const Colour colour(r_uint, g_uint, b_uint);
 
-			if (std::find(colours.begin(), colours.end(), colour) == colours.end()) colours.push_back(colour);
-
-			//colours.push_back(Colour(srgb));
+			if (removeDupes) {
+				auto found = std::find(colours.begin(), colours.end(), colour);
+				if (found == colours.end()) {
+					colours.push_back(colour);
+				} else {
+					found->AddFrequency();
+				}
+			} else {
+				colours.push_back(colour);
+			}
 
 			// -- Check Time --
 
@@ -54,13 +61,29 @@ void KMeans::GetColours(const Image& image, std::vector<Colour>& colours) {
 	Log::EndLine();
 }
 
-void KMeans::FirstCenter(const std::vector<Colour>& colours, std::vector<OkLab>& centers) {
-	const unsigned int randIndex = Random::RandUInt(0, (unsigned int)colours.size() - 1);
-	centers.push_back(colours[randIndex].GetOkLab());
+void KMeans::FirstCenter(std::vector<Colour>& colours, std::vector<OkLab>& centers, const bool random) {
+	if (random) {
+		const size_t randomIndex = (size_t)Random::RandUInt(0, (unsigned int)colours.size() - 1);
+		centers.push_back(colours[randomIndex].GetOkLab());
 
-	if (KMeans::TestDebug) {
-		Log::EndLine();
-		Log::WriteOneLine("Random First Point: rgb(" + colours[randIndex].GetsRGB().UintDebug() + ")");
+		if (KMeans::TestDebug) {
+			Log::EndLine();
+			Log::WriteOneLine("First Point: rgb(" + colours[randomIndex].GetsRGB().UintDebug() + ")");
+		}
+
+		Colour::SetSortMode(Colour::SortMode::DISTANCE);
+	} else {
+		Colour::SetSortMode(Colour::SortMode::FREQUENCY);
+
+		std::sort(colours.begin(), colours.end(), std::greater<Colour>());
+		centers.push_back(colours.front().GetOkLab());
+
+		if (KMeans::TestDebug) {
+			Log::EndLine();
+			Log::WriteOneLine("First Point: rgb(" + colours.front().GetsRGB().UintDebug() + ")");
+		}
+
+		Colour::SetSortMode(Colour::SortMode::DISTANCE);
 	}
 }
 
@@ -82,7 +105,7 @@ bool KMeans::SortColours(std::vector<Colour>& colours, const std::vector<OkLab>&
 	if (debug) {
 		const unsigned int intPrecision = (unsigned int)(std::to_string(colours.size())).size();
 		//Log::EndLine();
-		
+
 		Log::StartLine();
 		Log::Write("  Front Colour: rgb(" + colours.front().GetRGBUint() + "), ");
 		Log::Write("Distance: " + Log::ToString(colours.front().GetDistance()) + ", ");

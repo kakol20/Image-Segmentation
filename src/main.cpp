@@ -99,11 +99,13 @@ int main(int argc, char* argv[]) {
 	const bool haveCount = settings.contains("count");
 	const bool haveSeed = settings.contains("seed");
 	const bool haveMaxIter = settings.contains("maxIter");
+	const bool haveRedup = settings.contains("removeDuplicates");
 
-	if (!(haveCount && haveSeed && haveMaxIter)) {
+	if (!(haveCount && haveSeed && haveMaxIter && haveRedup)) {
 		if (!haveCount) Log::WriteOneLine("JSON setting not found: count");
 		if (!haveSeed) Log::WriteOneLine("JSON setting not found: seed");
 		if (!haveMaxIter) Log::WriteOneLine("JSON setting not found: maxIter");
+		if (!haveRedup) Log::WriteOneLine("JSON setting not found: removeDuplicates");
 
 		Log::Save();
 		std::cout << "\nPress enter to exit...\n";
@@ -114,6 +116,7 @@ int main(int argc, char* argv[]) {
 	const int count = settings["count"];
 	Random::Seed = (unsigned int)settings["seed"];
 	const unsigned int maxIter = (unsigned int)settings["maxIter"];
+	const bool removeDuplicates = settings["removeDuplicates"];
 
 	Log::WriteOneLine("Count: " + std::to_string(count));
 	Log::WriteOneLine("Seed: " + std::to_string(Random::Seed));
@@ -126,7 +129,7 @@ int main(int argc, char* argv[]) {
 
 	std::vector<Colour> colours;
 
-	KMeans::GetColours(inputImg, colours);
+	KMeans::GetColours(inputImg, colours, removeDuplicates);
 
 	Log::WriteOneLine("Colour count in image: " + std::to_string(colours.size()));
 
@@ -152,7 +155,7 @@ int main(int argc, char* argv[]) {
 	std::vector<OkLab> centers;
 	centers.reserve((size_t)count);
 
-	KMeans::FirstCenter(colours, centers);
+	KMeans::FirstCenter(colours, centers, removeDuplicates);
 	KMeans::SortColours(colours, centers, true);
 
 	Log::EndLine();

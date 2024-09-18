@@ -24,11 +24,15 @@ public:
 	}
 
 	bool operator<(const Colour& other) const {
+		if (Colour::Mode == Colour::SortMode::DISTANCE) return m_dist < other.m_dist;
+		if (Colour::Mode == Colour::SortMode::FREQUENCY) return m_freq < other.m_freq;
 		return m_dist < other.m_dist;
-	}
+	};
 	bool operator>(const Colour& other) const {
+		if (Colour::Mode == Colour::SortMode::DISTANCE) return m_dist > other.m_dist;
+		if (Colour::Mode == Colour::SortMode::FREQUENCY) return m_freq > other.m_freq;
 		return m_dist > other.m_dist;
-	}
+	};
 
 	bool operator<=(const Colour& other) const {
 		return this->operator<(other) || this->operator==(other);
@@ -55,6 +59,13 @@ public:
 	/// <returns>Returns if changed</returns>
 	bool Compare(const OkLab& lab, const size_t index);
 
+	void AddFrequency();
+
+	enum class SortMode {
+		FREQUENCY, DISTANCE
+	};
+	static void SetSortMode(const Colour::SortMode mode);
+
 private:
 	sRGB m_srgb;
 	OkLab m_lab;
@@ -63,4 +74,7 @@ private:
 
 	size_t m_centerIndex;
 	double m_dist;
+	unsigned int m_freq;
+
+	static Colour::SortMode Mode;
 };

@@ -98,10 +98,12 @@ int main(int argc, char* argv[]) {
 
 	const bool haveCount = settings.contains("count");
 	const bool haveSeed = settings.contains("seed");
+	const bool haveMaxIter = settings.contains("maxIter");
 
-	if (!(haveCount && haveSeed)) {
+	if (!(haveCount && haveSeed && haveMaxIter)) {
 		if (!haveCount) Log::WriteOneLine("JSON setting not found: count");
 		if (!haveSeed) Log::WriteOneLine("JSON setting not found: seed");
+		if (!haveMaxIter) Log::WriteOneLine("JSON setting not found: maxIter");
 
 		Log::Save();
 		std::cout << "\nPress enter to exit...\n";
@@ -111,6 +113,7 @@ int main(int argc, char* argv[]) {
 
 	const int count = settings["count"];
 	Random::Seed = (unsigned int)settings["seed"];
+	const unsigned int maxIter = (unsigned int)settings["maxIter"];
 
 	Log::WriteOneLine("Count: " + std::to_string(count));
 	Log::WriteOneLine("Seed: " + std::to_string(Random::Seed));
@@ -146,7 +149,7 @@ int main(int argc, char* argv[]) {
 	std::vector<OkLab> centers;
 	KMeans::FirstCenter(colours, centers);
 
-	KMeans::SortColours(colours, centers, KMeans::TestDebug);
+	KMeans::SortColours(colours, centers, true);
 
 	Log::EndLine();
 	Log::WriteOneLine("Adding centers...");
@@ -170,6 +173,59 @@ int main(int argc, char* argv[]) {
 	Log::WriteOneLine("Before Movement");
 	Log::WriteOneLine("Centers Count: " + Log::ToString(centers.size()));
 	KMeans::SortColours(colours, centers, true);
+
+	Log::EndLine();
+	Log::WriteOneLine("Unmoved Centers");
+	for (size_t i = 0; i < centers.size(); i++) {
+		const sRGB srgb = OkLab::OkLabtosRGB(centers[i]);
+		const std::string hex = srgb.sRGBtoHex();
+		const std::string rgb = srgb.UintDebug();
+
+		Log::WriteOneLine("#" + hex + " - rgb(" + rgb + ")");
+	}
+
+	// -- Move Centers --
+	
+	Log::EndLine();
+	Log::WriteOneLine("Moving Centers...");
+
+	unsigned int iterationCount = 0;
+	const std::string maxIterStr = Log::ToString(maxIter);
+
+	Log::StartTime();
+	while (true) {
+		iterationCount++;
+
+		KMeans::MoveCenters(colours, centers);
+
+		if (!KMeans::SortColours(colours, centers)) break;
+		if (iterationCount >= maxIter) break;
+
+		if (Log::CheckTimeSeconds(5.)) {
+			std::string progress = Log::ToString(iterationCount, (unsigned int)maxIterStr.size(), ' ');
+
+			Log::WriteOneLine("  Iteration Count: " + progress);
+			Log::StartTime();
+		}
+	}
+	Log::WriteOneLine("Took " + Log::ToString(iterationCount) + " iterations");
+	
+	// ----- SAVE PALETTE FILE -----
+
+	Log::EndLine();
+	Log::WriteOneLine("After Movement");
+	std::string extraChange = KMeans::SortColours(colours, centers, true) ? "TRUE" : "FALSE";
+	if (KMeans::TestDebug) Log::WriteOneLine("Extra Change: " + extraChange);
+	Log::EndLine();
+
+	Log::WriteOneLine("Moved Centers");
+	for (size_t i = 0; i < centers.size(); i++) {
+		const sRGB srgb = OkLab::OkLabtosRGB(centers[i]);
+		const std::string hex = srgb.sRGBtoHex();
+		const std::string rgb = srgb.UintDebug();
+
+		Log::WriteOneLine("#" + hex + " - rgb(" + rgb + ")");
+	}
 
 	Log::Save();
 

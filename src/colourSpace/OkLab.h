@@ -20,6 +20,7 @@ public:
 	OkLab& operator+=(const OkLab& other);
 	OkLab& operator-=(const OkLab& other);
 	OkLab& operator*=(const double scalar);
+	OkLab& operator/=(const double scalar);
 
 	OkLab operator/(const OkLab& other) const { OkLab out(*this); out /= other; return out; };
 	OkLab operator*(const OkLab& other) const { OkLab out(*this); out *= other; return out; };

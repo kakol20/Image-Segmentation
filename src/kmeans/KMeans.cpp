@@ -54,7 +54,7 @@ void KMeans::GetColours(const Image& image, std::vector<Colour>& colours) {
 }
 
 void KMeans::FirstCenter(const std::vector<Colour>& colours, std::vector<OkLab>& centers) {
-	const unsigned int randIndex = Random::RandUInt(0, colours.size() - 1);
+	const unsigned int randIndex = Random::RandUInt(0, (unsigned int)colours.size() - 1);
 	centers.push_back(colours[randIndex].GetOkLab());
 
 	if (KMeans::TestDebug) {
@@ -67,17 +67,19 @@ void KMeans::NewCenter(const std::vector<Colour>& colours, std::vector<OkLab>& c
 	centers.push_back(colours.front().GetOkLab());
 }
 
-void KMeans::SortColours(std::vector<Colour>& colours, const std::vector<OkLab>& centers, const bool debug) {
+bool KMeans::SortColours(std::vector<Colour>& colours, const std::vector<OkLab>& centers, const bool debug) {
+	bool changed = false;
 	for (size_t i = 0; i < colours.size(); i++) {
 		for (size_t j = 0; j < centers.size(); j++) {
-			colours[i].Compare(centers[j], j);
+			const bool compare = colours[i].Compare(centers[j], j);
+			changed = compare || changed;
 		}
 	}
 
 	std::sort(colours.begin(), colours.end(), std::greater<Colour>());
 
 	if (debug) {
-		const unsigned int intPrecision = (std::to_string(colours.size())).size();
+		const unsigned int intPrecision = (unsigned int)(std::to_string(colours.size())).size();
 		//Log::EndLine();
 		
 		Log::StartLine();
@@ -91,5 +93,24 @@ void KMeans::SortColours(std::vector<Colour>& colours, const std::vector<OkLab>&
 		Log::Write("Distance: " + Log::ToString(colours.back().GetDistance()) + ", ");
 		Log::Write("Center Index: " + Log::ToString(colours.back().GetCenterIndex(), intPrecision));
 		Log::EndLine();
+	}
+
+	return changed;
+}
+
+void KMeans::MoveCenters(const std::vector<Colour>& colours, std::vector<OkLab>& centers) {
+	std::vector<OkLab> average(centers.size());
+	std::vector<unsigned int> centerCount(centers.size());
+
+	for (size_t i = 0; i < colours.size(); i++) {
+		const size_t centerIndex = colours[i].GetCenterIndex();
+
+		average[centerIndex] += colours[i].GetOkLab();
+		centerCount[centerIndex] += 1;
+	}
+
+	for (size_t i = 0; i < centers.size(); i++) {
+		average[i] /= (double)centerCount[i];
+		centers[i] = average[i];
 	}
 }

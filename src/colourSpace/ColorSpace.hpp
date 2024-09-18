@@ -60,6 +60,7 @@ public:
 	ColorSpace& operator+=(const ColorSpace& other);
 	ColorSpace& operator-=(const ColorSpace& other);
 	ColorSpace& operator*=(const double scalar);
+	ColorSpace& operator/=(const double scalar);
 
 protected:
 	double m_a, m_b, m_c;
@@ -97,5 +98,12 @@ inline ColorSpace& ColorSpace::operator*=(const double scalar) {
 	m_a *= scalar;
 	m_b *= scalar;
 	m_c *= scalar;
+	return *this;
+}
+
+inline ColorSpace& ColorSpace::operator/=(const double scalar) {
+	m_a /= scalar;
+	m_b /= scalar;
+	m_c /= scalar;
 	return *this;
 }

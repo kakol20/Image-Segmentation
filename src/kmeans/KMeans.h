@@ -12,7 +12,16 @@ namespace KMeans
 	void FirstCenter(const std::vector<Colour>& colours, std::vector<OkLab>& centers);
 	void NewCenter(const std::vector<Colour>& colours, std::vector<OkLab>& centers);
 
-	void SortColours(std::vector<Colour>& colours, const std::vector<OkLab>& centers, const bool debug = false);
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="colours"></param>
+	/// <param name="centers"></param>
+	/// <param name="debug"></param>
+	/// <returns>Returns if any point has been changed</returns>
+	bool SortColours(std::vector<Colour>& colours, const std::vector<OkLab>& centers, const bool debug = false);
+
+	void MoveCenters(const std::vector<Colour>& colours, std::vector<OkLab>& centers);
 
 	extern bool TestDebug;
 

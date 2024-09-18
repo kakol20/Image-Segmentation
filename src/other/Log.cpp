@@ -116,7 +116,25 @@ std::string Log::ToString(const double value, const unsigned int precision) {
 
 std::string Log::ToString(const size_t value, const unsigned int precision, const char lead) {
 	std::string out = std::to_string(value);
-	//return std::to_string(value);
+
+	if (precision > 0) {
+		const int delta = (int)precision - (int)out.size();
+
+		if (delta >= 1) {
+			std::string leading = "";
+			for (int i = 0; i < delta; i++) {
+				leading += lead;
+			}
+
+			out = leading + out;
+		}
+	}
+
+	return out;
+}
+
+std::string Log::ToString(const unsigned int value, const unsigned int precision, const char lead) {
+	std::string out = std::to_string(value);
 
 	if (precision > 0) {
 		const int delta = (int)precision - (int)out.size();

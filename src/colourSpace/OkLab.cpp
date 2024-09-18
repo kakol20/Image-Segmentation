@@ -84,7 +84,7 @@ sRGB OkLab::OkLabtosRGB(const OkLab& oklab) {
 		b1 = b2 * b2 * b2;
 
 		// to Linear RGB
-		r2 = 4.076741661667 * r1 - 3.307711590572 * g1 + 0.230969928905 * b1;
+		r2 =  4.076741661667 * r1 - 3.307711590572 * g1 + 0.230969928905 * b1;
 		g2 = -1.268438004344 * r1 + 2.609757400792 * g1 - 0.341319396448 * b1;
 		b2 = -0.004196086474 * r1 - 0.703418614494 * g1 + 1.707614700968 * b1;
 
@@ -122,6 +122,11 @@ OkLab& OkLab::operator-=(const OkLab& other) {
 
 OkLab& OkLab::operator*=(const double scalar) {
 	ColorSpace::operator*=(scalar);
+	return *this;
+}
+
+OkLab& OkLab::operator/=(const double scalar) {
+	ColorSpace::operator/=(scalar);
 	return *this;
 }
 

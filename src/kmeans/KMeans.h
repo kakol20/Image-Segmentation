@@ -23,6 +23,8 @@ namespace KMeans
 
 	void MoveCenters(const std::vector<Colour>& colours, std::vector<OkLab>& centers);
 
+	void SavePalette(const std::string& loc, const std::vector<OkLab>& centers);
+
 	extern bool TestDebug;
 
 }

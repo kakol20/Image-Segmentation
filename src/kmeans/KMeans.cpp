@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <fstream>
 
 #include "../other/Log.h"
 #include "../other/Random.h"
@@ -113,4 +114,19 @@ void KMeans::MoveCenters(const std::vector<Colour>& colours, std::vector<OkLab>&
 		average[i] /= (double)centerCount[i];
 		centers[i] = average[i];
 	}
+}
+
+void KMeans::SavePalette(const std::string& loc, const std::vector<OkLab>& centers) {
+	const std::string paletteLoc = loc + ".palette";
+
+	std::fstream paletteFile;
+	paletteFile.open(paletteLoc, std::ios_base::out);
+
+	for (size_t i = 0; i < centers.size(); i++) {
+		if (i > 0) paletteFile << '\n';
+		const sRGB srgb = OkLab::OkLabtosRGB(centers[i]);
+
+		paletteFile << srgb.sRGBtoHex();
+	}
+	paletteFile.close();
 }

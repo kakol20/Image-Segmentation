@@ -132,11 +132,14 @@ int main(int argc, char* argv[]) {
 
 	if (colours.size() <= count) {
 		Log::WriteOneLine("Colour count is less than or equal to count setting");
+
+		std::vector<OkLab> centers;
+		centers.reserve(colours.size());
+		for (size_t i = 0; i < colours.size(); i++) {
+			centers.push_back(colours[i].GetOkLab());
+		}
 		
-		/*
-		TODO: 
-			Save palette file
-		*/
+		KMeans::SavePalette(GetFileNoExtension(imgLoc), centers);
 
 		Log::Save();
 		std::cout << "\nPress enter to exit...\n";
@@ -147,8 +150,9 @@ int main(int argc, char* argv[]) {
 	// -- Get Centers --
 
 	std::vector<OkLab> centers;
-	KMeans::FirstCenter(colours, centers);
+	centers.reserve((size_t)count);
 
+	KMeans::FirstCenter(colours, centers);
 	KMeans::SortColours(colours, centers, true);
 
 	Log::EndLine();
@@ -226,6 +230,7 @@ int main(int argc, char* argv[]) {
 
 		Log::WriteOneLine("#" + hex + " - rgb(" + rgb + ")");
 	}
+	KMeans::SavePalette(GetFileNoExtension(imgLoc), centers);
 
 	Log::Save();
 

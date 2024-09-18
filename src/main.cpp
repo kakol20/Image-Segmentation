@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <thread>
 
 #include "../ext/json/json.hpp"
 #include "colourSpace/ColorSpace.hpp"
@@ -34,6 +35,8 @@ int main(int argc, char* argv[]) {
 		Log::Save();
 		std::cout << "\nPress enter to exit...\n";
 		std::cin.ignore();
+		std::cout << '\a';
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 		return 0;
 	}
 
@@ -64,6 +67,8 @@ int main(int argc, char* argv[]) {
 		Log::Save();
 		std::cout << "\nPress enter to exit...\n";
 		std::cin.ignore();
+		std::cout << '\a';
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 		return 0;
 	}
 
@@ -78,6 +83,8 @@ int main(int argc, char* argv[]) {
 		Log::Save();
 		std::cout << "\nPress enter to exit...\n";
 		std::cin.ignore();
+		std::cout << '\a';
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 		return 0;
 	}
 	Log::WriteOneLine("Width: " + std::to_string(inputImg.GetWidth()));
@@ -90,6 +97,8 @@ int main(int argc, char* argv[]) {
 		Log::Save();
 		std::cout << "\nPress enter to exit...\n";
 		std::cin.ignore();
+		std::cout << '\a';
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 		return 0;
 	}
 	Log::WriteOneLine("Read success: " + jsonLoc);
@@ -110,6 +119,8 @@ int main(int argc, char* argv[]) {
 		Log::Save();
 		std::cout << "\nPress enter to exit...\n";
 		std::cin.ignore();
+		std::cout << '\a';
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 		return 0;
 	}
 
@@ -147,6 +158,8 @@ int main(int argc, char* argv[]) {
 		Log::Save();
 		std::cout << "\nPress enter to exit...\n";
 		std::cin.ignore();
+		std::cout << '\a';
+		std::this_thread::sleep_for(std::chrono::seconds(1));
 		return 0;
 	}
 
@@ -237,6 +250,8 @@ int main(int argc, char* argv[]) {
 
 	Log::Save();
 
+	std::cout << '\a';
+	std::this_thread::sleep_for(std::chrono::seconds(1));
 	return 0;
 }
 

@@ -95,9 +95,17 @@ bool KMeans::SortColours(std::vector<Colour>& colours, const std::vector<OkLab>&
 	bool changed = false;
 	for (size_t i = 0; i < colours.size(); i++) {
 		for (size_t j = 0; j < centers.size(); j++) {
-			const bool compare = colours[i].Compare(centers[j], j);
-			changed = compare || changed;
+			if (j == 0) {
+				colours[i].StartCompare(centers[j], j);
+			} else {
+				colours[i].Compare(centers[j], j);
+			}
 		}
+	}
+
+	for (size_t i = 0; i < colours.size(); i++) {
+		changed = colours[i].Changed() || changed;
+		colours[i].UpdateOldIndex();
 	}
 
 	std::sort(colours.begin(), colours.end(), std::greater<Colour>());

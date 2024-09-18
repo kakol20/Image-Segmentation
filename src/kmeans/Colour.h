@@ -57,7 +57,11 @@ public:
 	/// <param name="lab"></param>
 	/// <param name="index"></param>
 	/// <returns>Returns if changed</returns>
-	bool Compare(const OkLab& lab, const size_t index);
+	void Compare(const OkLab& lab, const size_t index);
+
+	bool Changed() const { return m_oldCenterIndex != m_centerIndex; };
+
+	void UpdateOldIndex() { m_oldCenterIndex = m_centerIndex; };
 
 	void AddFrequency();
 
@@ -72,6 +76,7 @@ private:
 
 	uint8_t m_r, m_g, m_b;
 
+	size_t m_oldCenterIndex;
 	size_t m_centerIndex;
 	double m_dist;
 	unsigned int m_freq;

@@ -61,8 +61,8 @@ void KMeans::GetColours(const Image& image, std::vector<Colour>& colours, const 
 	Log::EndLine();
 }
 
-void KMeans::FirstCenter(std::vector<Colour>& colours, std::vector<OkLab>& centers, const bool random) {
-	if (random) {
+void KMeans::FirstCenter(std::vector<Colour>& colours, std::vector<OkLab>& centers, const bool removeDupes = false) {
+	if (!removeDupes) {
 		const size_t randomIndex = (size_t)Random::RandUInt(0, (unsigned int)colours.size() - 1);
 		centers.push_back(colours[randomIndex].GetOkLab());
 

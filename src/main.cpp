@@ -27,17 +27,43 @@ const double Maths::DegToRad = Maths::Pi / 180.;
 std::string GetFileExtension(const std::string loc);
 std::string GetFileNoExtension(const std::string loc);
 
+int Run(int argc, char* argv[]);
+
 int main(int argc, char* argv[]) {
+	const int returnInt = Run(argc, argv);
+	Log::EndLine();
+	Log::WriteOneLine(std::to_string(returnInt));
+
+	/*try {
+		Run(argc, argv);
+	}
+	catch (int errorCode) {
+		Log::WriteOneLine("Error Code: " + std::to_string(errorCode));
+	}*/
+
+	Log::Save();
+
+	std::cout << '\a';
+
+	std::cout << "\nPress enter to exit...\n";
+	std::cin.ignore();
+	//std::cout << '\a';
+	//std::this_thread::sleep_for(std::chrono::seconds(1));
+
+	return returnInt;
+}
+
+int Run(int argc, char* argv[]) {
 	if (argc < 3) {
 		Log::WriteOneLine("Drag and drop an image file, and a .json file");
 		Log::WriteOneLine("Note: Only PNG, JPG, BMP or TGA image files are supported");
 
-		Log::Save();
-		std::cout << "\nPress enter to exit...\n";
+		//Log::Save();
+		/*std::cout << "\nPress enter to exit...\n";
 		std::cin.ignore();
 		std::cout << '\a';
-		std::this_thread::sleep_for(std::chrono::seconds(1));
-		return 0;
+		std::this_thread::sleep_for(std::chrono::seconds(1));*/
+		return -1;
 	}
 
 	std::string imgLoc;
@@ -54,7 +80,8 @@ int main(int argc, char* argv[]) {
 		if (fileExtension == "json") {
 			jsonLoc = argv[i];
 			haveJson = true;
-		} else if (fileExtension == "png" || fileExtension == "jpg" || fileExtension == "bmp" || fileExtension == "tga") {
+		}
+		else if (fileExtension == "png" || fileExtension == "jpg" || fileExtension == "bmp" || fileExtension == "tga") {
 			imgLoc = argv[i];
 			haveImg = true;
 		}
@@ -64,12 +91,12 @@ int main(int argc, char* argv[]) {
 		if (!haveImg) Log::WriteOneLine("Image file not found");
 		if (!haveJson) Log::WriteOneLine("JSON file not found");
 
-		Log::Save();
+		/*Log::Save();
 		std::cout << "\nPress enter to exit...\n";
 		std::cin.ignore();
 		std::cout << '\a';
-		std::this_thread::sleep_for(std::chrono::seconds(1));
-		return 0;
+		std::this_thread::sleep_for(std::chrono::seconds(1));*/
+		return -1;
 	}
 
 	Log::WriteOneLine("Image: " + imgLoc);
@@ -80,12 +107,12 @@ int main(int argc, char* argv[]) {
 
 	Image inputImg;
 	if (!inputImg.Read(imgLoc.c_str(), 3)) {
-		Log::Save();
+		/*Log::Save();
 		std::cout << "\nPress enter to exit...\n";
 		std::cin.ignore();
 		std::cout << '\a';
-		std::this_thread::sleep_for(std::chrono::seconds(1));
-		return 0;
+		std::this_thread::sleep_for(std::chrono::seconds(1));*/
+		return -1;
 	}
 	Log::WriteOneLine("Width: " + std::to_string(inputImg.GetWidth()));
 	Log::WriteOneLine("Height: " + std::to_string(inputImg.GetHeight()));
@@ -94,12 +121,12 @@ int main(int argc, char* argv[]) {
 	std::ifstream f(jsonLoc);
 	if (!(f)) {
 		Log::WriteOneLine("Read failed: " + jsonLoc);
-		Log::Save();
+		/*Log::Save();
 		std::cout << "\nPress enter to exit...\n";
 		std::cin.ignore();
 		std::cout << '\a';
-		std::this_thread::sleep_for(std::chrono::seconds(1));
-		return 0;
+		std::this_thread::sleep_for(std::chrono::seconds(1));*/
+		return -1;
 	}
 	Log::WriteOneLine("Read success: " + jsonLoc);
 
@@ -116,12 +143,12 @@ int main(int argc, char* argv[]) {
 		if (!haveMaxIter) Log::WriteOneLine("JSON setting not found: maxIter");
 		if (!haveRedup) Log::WriteOneLine("JSON setting not found: removeDuplicates");
 
-		Log::Save();
+		/*Log::Save();
 		std::cout << "\nPress enter to exit...\n";
 		std::cin.ignore();
 		std::cout << '\a';
-		std::this_thread::sleep_for(std::chrono::seconds(1));
-		return 0;
+		std::this_thread::sleep_for(std::chrono::seconds(1));*/
+		return -1;
 	}
 
 	const int count = settings["count"];
@@ -152,15 +179,15 @@ int main(int argc, char* argv[]) {
 		for (size_t i = 0; i < colours.size(); i++) {
 			centers.push_back(colours[i].GetOkLab());
 		}
-		
+
 		KMeans::SavePalette(GetFileNoExtension(imgLoc), centers);
 
 		Log::Save();
-		std::cout << "\nPress enter to exit...\n";
+		/*std::cout << "\nPress enter to exit...\n";
 		std::cin.ignore();
 		std::cout << '\a';
-		std::this_thread::sleep_for(std::chrono::seconds(1));
-		return 0;
+		std::this_thread::sleep_for(std::chrono::seconds(1));*/
+		return -1;
 	}
 
 	// -- Get Centers --
@@ -205,7 +232,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	// -- Move Centers --
-	
+
 	Log::EndLine();
 	Log::WriteOneLine("Moving Centers...");
 
@@ -229,7 +256,7 @@ int main(int argc, char* argv[]) {
 		}
 	}
 	Log::WriteOneLine("Took " + Log::ToString(iterationCount) + " iterations");
-	
+
 	// ----- SAVE PALETTE FILE -----
 
 	Log::EndLine();
@@ -248,10 +275,6 @@ int main(int argc, char* argv[]) {
 	}
 	KMeans::SavePalette(GetFileNoExtension(imgLoc), centers);
 
-	Log::Save();
-
-	std::cout << '\a';
-	std::this_thread::sleep_for(std::chrono::seconds(1));
 	return 0;
 }
 

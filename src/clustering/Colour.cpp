@@ -65,6 +65,36 @@ Colour::Colour(const uint8_t r, const uint8_t g, const uint8_t b) {
 	m_freq = 0;
 }
 
+Colour& Colour::operator/=(const Colour& other) {
+	m_lab /= other.m_lab;
+	return *this;
+}
+
+Colour& Colour::operator*=(const Colour& other) {
+	m_lab *= other.m_lab;
+	return *this;
+}
+
+Colour& Colour::operator+=(const Colour& other) {
+	m_lab += other.m_lab;
+	return *this;
+}
+
+Colour& Colour::operator-=(const Colour& other) {
+	m_lab -= other.m_lab;
+	return *this;
+}
+
+Colour& Colour::operator*=(const double scalar) {
+	m_lab *= scalar;
+	return *this;
+}
+
+Colour& Colour::operator/=(const double scalar) {
+	m_lab /= scalar;
+	return *this;
+}
+
 std::string Colour::GetRGBUint() const {
 	return Log::ToString((size_t)m_r, 3, ' ') + " " + Log::ToString((size_t)m_g, 3, ' ') + " " + Log::ToString((size_t)m_b, 3, ' ');
 }

@@ -24,6 +24,7 @@ public:
 	sRGB& operator+=(const sRGB& other);
 	sRGB& operator-=(const sRGB& other);
 	sRGB& operator*=(const double scalar);
+	sRGB& operator/=(const double scalar);
 
 	sRGB operator/(const sRGB& other) const { sRGB out(*this); out /= other; return out; };
 	sRGB operator*(const sRGB& other) const { sRGB out(*this); out *= other; return out; };
@@ -90,6 +91,11 @@ inline sRGB& sRGB::operator-=(const sRGB& other) {
 
 inline sRGB& sRGB::operator*=(const double scalar) {
 	ColorSpace::operator*=(scalar);
+	return *this;
+}
+
+inline sRGB& sRGB::operator/=(const double scalar) {
+	ColorSpace::operator/=(scalar);
 	return *this;
 }
 

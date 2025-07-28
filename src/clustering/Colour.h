@@ -43,6 +43,18 @@ public:
 
 	// ----- ARITHMETIC -----
 
+	Colour& operator/=(const Colour& other);
+	Colour& operator*=(const Colour& other);
+	Colour& operator+=(const Colour& other);
+	Colour& operator-=(const Colour& other);
+	Colour& operator*=(const double scalar);
+	Colour& operator/=(const double scalar);
+
+	Colour operator/(const Colour& other) const { Colour out(*this); out /= other; return out; };
+	Colour operator*(const Colour& other) const { Colour out(*this); out *= other; return out; };
+	Colour operator+(const Colour& other) const { Colour out(*this); out += other; return out; };
+	Colour operator-(const Colour& other) const { Colour out(*this); out -= other; return out; };
+	Colour operator*(const double scalar) const { Colour out(*this); out *= scalar; return out; };
 
 	// ----- OTHER -----
 

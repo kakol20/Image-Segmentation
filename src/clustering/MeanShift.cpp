@@ -21,7 +21,7 @@ Colour MeanShift::ComputeMean(const std::vector<Colour>& colours, const Colour& 
 	return sum;
 }
 
-std::vector<Colour> MeanShift::MergeCenters(const std::vector<Colour>& centers, double tolerance) {
+std::vector<Colour> MeanShift::MergeCenters(const std::vector<Colour>& centers, const double tolerance) {
 	std::vector<Colour> merged;
 
 	for (const auto& c : centers) {
@@ -35,4 +35,50 @@ std::vector<Colour> MeanShift::MergeCenters(const std::vector<Colour>& centers, 
 		if (!found) merged.push_back(c);
 	}
 	return merged;
+}
+
+void MeanShift::Run(const std::vector<Colour>& colours, std::vector<Colour>& centers, const double bandwidth, const double tolerance, const unsigned int maxIter) {
+	std::vector<Colour> shifted = colours;
+
+	// Shift each point
+
+	Log::StartTime();
+
+	Log::EndLine();
+	Log::StartLine();
+	Log::Write("Getting centers...");
+
+	for (size_t i = 0; i < shifted.size(); i++) {
+		Colour prev = shifted[i];
+		unsigned int iter = 0;
+
+		while (iter++ < 32) {
+			Colour next = MeanShift::ComputeMean(colours, prev, bandwidth);
+			if (Colour::LabDistance(next, prev) < tolerance) break;
+			prev = next;
+		}
+		shifted[i] = prev;
+
+		// -- Check Time --
+
+		if (Log::CheckTimeSeconds(5.)) {
+			double progress = double(i) / double(shifted.size());
+			progress *= 100.;
+
+			std::string outStr = Log::ToString(progress, 6);
+			outStr = Log::LeadingCharacter(outStr, 9);
+
+			Log::EndLine();
+			Log::StartLine();
+			Log::Write("  ");
+			Log::Write(outStr);
+			Log::Write("%");
+
+			Log::StartTime();
+		}
+	}
+	Log::EndLine();
+
+	// Merge final positions into cluster centers
+	centers = MeanShift::MergeCenters(shifted, tolerance);
 }

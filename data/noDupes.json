@@ -3,5 +3,7 @@
 	"seed": 1,
 	"maxIter": 10000,
 	"removeDuplicates": true,
-	"tolerance": 0.001
+	"tolerance": 0.001,
+	"bandwidth": 0.1,
+	"strictCount": true
 }

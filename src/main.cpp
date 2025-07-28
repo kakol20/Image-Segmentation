@@ -125,6 +125,7 @@ int Run(int argc, char* argv[]) {
 	const bool haveMaxIter = settings.contains("maxIter");
 	const bool haveRedup = settings.contains("removeDuplicates");
 	const bool haveSeed = settings.contains("seed");
+	const bool haveStrictCount = settings.contains("strictCount");
 	const bool haveTolerance = settings.contains("tolerance");
 
 	if (!(haveBandwidth && haveCount && haveSeed && haveMaxIter && haveRedup && haveTolerance)) {
@@ -133,12 +134,14 @@ int Run(int argc, char* argv[]) {
 		if (!haveMaxIter) Log::WriteOneLine("JSON setting not found: maxIter");
 		if (!haveRedup) Log::WriteOneLine("JSON setting not found: removeDuplicates");
 		if (!haveSeed) Log::WriteOneLine("JSON setting not found: seed");
+		if (!haveStrictCount) Log::WriteOneLine("JSON setting not found: strictCount");
 		if (!haveTolerance) Log::WriteOneLine("JSON setting not found: tolerance");
 
 		return -1;
 	}
 
 	const bool removeDuplicates = settings["removeDuplicates"];
+	const bool strictCount = settings["strictCount"];
 	const double bandwidth = (double)settings["bandwidth"];
 	const double tolerance = (double)settings["tolerance"];
 	const int count = settings["count"];
@@ -173,15 +176,14 @@ int Run(int argc, char* argv[]) {
 
 	// -- Get Centers using Mean Shift Clustering --
 
-	//const double bandwidth = MeanShift::EstimateBandwith(colours);
+	std::vector<Colour> centers;
+	//MeanShift::Run(colours, centers, bandwidth, tolerance, maxIter);
+	MeanShift::Run(colours, centers, bandwidth, tolerance, maxIter);
 
-	// Temporary
-	{
-		Colour center = Colour(128, 128, 128);
-
-		Colour mean = MeanShift::ComputeMean(colours, center, bandwidth);
-
-		bool temp = true;
+	if (strictCount) {
+		Log::WriteOneLine("Amount Before Reduce: " + Log::ToString(centers.size()));
+	} else {
+		Log::WriteOneLine("Amount: " + Log::ToString(centers.size()));
 	}
 
 	return 0;

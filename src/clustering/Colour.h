@@ -80,6 +80,8 @@ public:
 
 	void AddFrequency();
 
+	void UpdateRGBFromLab();
+
 	enum class SortMode {
 		FREQUENCY, DISTANCE
 	};

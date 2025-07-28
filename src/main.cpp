@@ -120,30 +120,30 @@ int Run(int argc, char* argv[]) {
 
 	json settings = json::parse(f);
 
+	const bool haveBandwidth = settings.contains("bandwidth");
 	const bool haveCount = settings.contains("count");
-	const bool haveSeed = settings.contains("seed");
 	const bool haveMaxIter = settings.contains("maxIter");
 	const bool haveRedup = settings.contains("removeDuplicates");
+	const bool haveSeed = settings.contains("seed");
 	const bool haveTolerance = settings.contains("tolerance");
-	const bool haveBandwidth = settings.contains("bandwidth");
 
-	if (!(haveCount && haveSeed && haveMaxIter && haveRedup)) {
+	if (!(haveBandwidth && haveCount && haveSeed && haveMaxIter && haveRedup && haveTolerance)) {
+		if (!haveBandwidth) Log::WriteOneLine("JSON setting not found: bandwidth");
 		if (!haveCount) Log::WriteOneLine("JSON setting not found: count");
-		if (!haveSeed) Log::WriteOneLine("JSON setting not found: seed");
 		if (!haveMaxIter) Log::WriteOneLine("JSON setting not found: maxIter");
 		if (!haveRedup) Log::WriteOneLine("JSON setting not found: removeDuplicates");
+		if (!haveSeed) Log::WriteOneLine("JSON setting not found: seed");
 		if (!haveTolerance) Log::WriteOneLine("JSON setting not found: tolerance");
-		if (!haveBandwidth) Log::WriteOneLine("JSON setting not found: bandwidth");
 
 		return -1;
 	}
 
-	const int count = settings["count"];
-	Random::Seed = (unsigned int)settings["seed"];
-	const unsigned int maxIter = (unsigned int)settings["maxIter"];
 	const bool removeDuplicates = settings["removeDuplicates"];
-	const double tolerance = (double)settings["tolerance"];
 	const double bandwidth = (double)settings["bandwidth"];
+	const double tolerance = (double)settings["tolerance"];
+	const int count = settings["count"];
+	const unsigned int maxIter = (unsigned int)settings["maxIter"];
+	Random::Seed = (unsigned int)settings["seed"];
 
 	Log::WriteOneLine("Count: " + std::to_string(count));
 	Log::WriteOneLine("Seed: " + std::to_string(Random::Seed));
@@ -175,7 +175,12 @@ int Run(int argc, char* argv[]) {
 
 	//const double bandwidth = MeanShift::EstimateBandwith(colours);
 
+	// Temporary
 	{
+		Colour center = Colour(128, 128, 128);
+
+		Colour mean = MeanShift::ComputeMean(colours, center, bandwidth);
+
 		bool temp = true;
 	}
 

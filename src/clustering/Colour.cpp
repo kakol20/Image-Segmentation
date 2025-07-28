@@ -119,6 +119,13 @@ void Colour::AddFrequency() {
 	m_freq += 1;
 }
 
+void Colour::UpdateRGBFromLab() {
+	m_srgb = OkLab::OkLabtosRGB(m_lab);
+	m_r = m_srgb.GetRUInt();
+	m_g = m_srgb.GetGUInt();
+	m_b = m_srgb.GetBUInt();
+}
+
 void Colour::SetSortMode(const Colour::SortMode mode) {
 	Colour::Mode = mode;
 }

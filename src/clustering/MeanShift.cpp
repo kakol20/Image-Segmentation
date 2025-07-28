@@ -4,6 +4,7 @@
 
 #include "../other/Log.h"
 
+
 Colour MeanShift::ComputeMean(const std::vector<Colour>& colours, const Colour& center, const double bandwidth) {
 	std::vector<Colour> inBand;
 	for (const auto& col : colours) {
@@ -17,6 +18,5 @@ Colour MeanShift::ComputeMean(const std::vector<Colour>& colours, const Colour& 
 
 	sum /= double(inBand.size());
 	sum.UpdateRGBFromLab();
-
 	return sum;
 }

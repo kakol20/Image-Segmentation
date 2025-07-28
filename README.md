@@ -1,5 +1,5 @@
 # Image Segmentation
-Image Segmentation using K-Means Clustering
+Image Segmentation using a mixture of Mean Shift Clustering and K-Means Clustering
 
 # Credits
 [stb_image](https://github.com/nothings/stb) Sean Barrett  

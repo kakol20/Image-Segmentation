@@ -58,11 +58,6 @@ int Run(int argc, char* argv[]) {
 		Log::WriteOneLine("Drag and drop an image file, and a .json file");
 		Log::WriteOneLine("Note: Only PNG, JPG, BMP or TGA image files are supported");
 
-		//Log::Save();
-		/*std::cout << "\nPress enter to exit...\n";
-		std::cin.ignore();
-		std::cout << '\a';
-		std::this_thread::sleep_for(std::chrono::seconds(1));*/
 		return -1;
 	}
 
@@ -91,11 +86,6 @@ int Run(int argc, char* argv[]) {
 		if (!haveImg) Log::WriteOneLine("Image file not found");
 		if (!haveJson) Log::WriteOneLine("JSON file not found");
 
-		/*Log::Save();
-		std::cout << "\nPress enter to exit...\n";
-		std::cin.ignore();
-		std::cout << '\a';
-		std::this_thread::sleep_for(std::chrono::seconds(1));*/
 		return -1;
 	}
 
@@ -106,14 +96,8 @@ int Run(int argc, char* argv[]) {
 	// ----- READ FILES -----
 
 	Image inputImg;
-	if (!inputImg.Read(imgLoc.c_str(), 3)) {
-		/*Log::Save();
-		std::cout << "\nPress enter to exit...\n";
-		std::cin.ignore();
-		std::cout << '\a';
-		std::this_thread::sleep_for(std::chrono::seconds(1));*/
-		return -1;
-	}
+	if (!inputImg.Read(imgLoc.c_str(), 3)) return -1;
+
 	Log::WriteOneLine("Width: " + std::to_string(inputImg.GetWidth()));
 	Log::WriteOneLine("Height: " + std::to_string(inputImg.GetHeight()));
 	Log::EndLine();

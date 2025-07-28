@@ -41,6 +41,9 @@ public:
 		return this->operator>(other) || this->operator==(other);
 	}
 
+	// ----- ARITHMETIC -----
+
+
 	// ----- OTHER -----
 
 	double GetDistance() const { return m_dist; };
@@ -69,6 +72,8 @@ public:
 		FREQUENCY, DISTANCE
 	};
 	static void SetSortMode(const Colour::SortMode mode);
+
+	static double LabDistance(const Colour& a, const Colour& b, const bool lightMode = false);
 
 private:
 	sRGB m_srgb;

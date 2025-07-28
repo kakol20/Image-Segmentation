@@ -6,16 +6,19 @@
 #include <thread>
 
 #include "../ext/json/json.hpp"
+#include "clustering/Colour.h"
+#include "clustering/KMeans.h"
+#include "clustering/MeanShift.h"
 #include "colourSpace/ColorSpace.hpp"
 #include "colourSpace/OkLab.h"
 #include "colourSpace/OkLCh.h"
 #include "colourSpace/sRGB.hpp"
 #include "image/Image.h"
-#include "kmeans/Colour.h"
-#include "kmeans/KMeans.h"
 #include "maths/Maths.hpp"
 #include "other/Log.h"
 #include "other/Random.h"
+
+//#define DEBUG
 
 using json = nlohmann::json;
 
@@ -54,20 +57,23 @@ int main(int argc, char* argv[]) {
 }
 
 int Run(int argc, char* argv[]) {
+#ifdef NDEBUG
 	if (argc < 3) {
 		Log::WriteOneLine("Drag and drop an image file, and a .json file");
 		Log::WriteOneLine("Note: Only PNG, JPG, BMP or TGA image files are supported");
 
 		return -1;
 	}
+#endif
 
 	std::string imgLoc;
-	bool haveImg = false;
-
 	std::string jsonLoc;
-	bool haveJson = false;
 
 	// ----- GET FILES -----
+
+#ifdef NDEBUG
+	bool haveImg = false;
+	bool haveJson = false;
 
 	for (int i = 1; i < argc; i++) {
 		std::string fileExtension = GetFileExtension(argv[i]);
@@ -75,8 +81,7 @@ int Run(int argc, char* argv[]) {
 		if (fileExtension == "json") {
 			jsonLoc = argv[i];
 			haveJson = true;
-		}
-		else if (fileExtension == "png" || fileExtension == "jpg" || fileExtension == "bmp" || fileExtension == "tga") {
+		} else if (fileExtension == "png" || fileExtension == "jpg" || fileExtension == "bmp" || fileExtension == "tga") {
 			imgLoc = argv[i];
 			haveImg = true;
 		}
@@ -88,6 +93,10 @@ int Run(int argc, char* argv[]) {
 
 		return -1;
 	}
+#else
+	jsonLoc = "data/dupes.json";
+	imgLoc = "data/rubik.png";
+#endif
 
 	Log::WriteOneLine("Image: " + imgLoc);
 	Log::WriteOneLine("JSON:  " + jsonLoc);
@@ -105,11 +114,6 @@ int Run(int argc, char* argv[]) {
 	std::ifstream f(jsonLoc);
 	if (!(f)) {
 		Log::WriteOneLine("Read failed: " + jsonLoc);
-		/*Log::Save();
-		std::cout << "\nPress enter to exit...\n";
-		std::cin.ignore();
-		std::cout << '\a';
-		std::this_thread::sleep_for(std::chrono::seconds(1));*/
 		return -1;
 	}
 	Log::WriteOneLine("Read success: " + jsonLoc);
@@ -120,18 +124,17 @@ int Run(int argc, char* argv[]) {
 	const bool haveSeed = settings.contains("seed");
 	const bool haveMaxIter = settings.contains("maxIter");
 	const bool haveRedup = settings.contains("removeDuplicates");
+	const bool haveTolerance = settings.contains("tolerance");
+	const bool haveBandwidth = settings.contains("bandwidth");
 
 	if (!(haveCount && haveSeed && haveMaxIter && haveRedup)) {
 		if (!haveCount) Log::WriteOneLine("JSON setting not found: count");
 		if (!haveSeed) Log::WriteOneLine("JSON setting not found: seed");
 		if (!haveMaxIter) Log::WriteOneLine("JSON setting not found: maxIter");
 		if (!haveRedup) Log::WriteOneLine("JSON setting not found: removeDuplicates");
+		if (!haveTolerance) Log::WriteOneLine("JSON setting not found: tolerance");
+		if (!haveBandwidth) Log::WriteOneLine("JSON setting not found: bandwidth");
 
-		/*Log::Save();
-		std::cout << "\nPress enter to exit...\n";
-		std::cin.ignore();
-		std::cout << '\a';
-		std::this_thread::sleep_for(std::chrono::seconds(1));*/
 		return -1;
 	}
 
@@ -139,15 +142,15 @@ int Run(int argc, char* argv[]) {
 	Random::Seed = (unsigned int)settings["seed"];
 	const unsigned int maxIter = (unsigned int)settings["maxIter"];
 	const bool removeDuplicates = settings["removeDuplicates"];
+	const double tolerance = (double)settings["tolerance"];
+	const double bandwidth = (double)settings["bandwidth"];
 
 	Log::WriteOneLine("Count: " + std::to_string(count));
 	Log::WriteOneLine("Seed: " + std::to_string(Random::Seed));
 
 	// ----- MAIN PROCESS -----
 
-	//KMeans::TempDebug = true;
-
-	// -- Get List of Colours
+	// -- Get List of Colours --
 
 	std::vector<Colour> colours;
 
@@ -165,99 +168,16 @@ int Run(int argc, char* argv[]) {
 		}
 
 		KMeans::SavePalette(GetFileNoExtension(imgLoc), centers);
-
-		Log::Save();
-		/*std::cout << "\nPress enter to exit...\n";
-		std::cin.ignore();
-		std::cout << '\a';
-		std::this_thread::sleep_for(std::chrono::seconds(1));*/
-		return -1;
+		return 0;
 	}
 
-	// -- Get Centers --
+	// -- Get Centers using Mean Shift Clustering --
 
-	std::vector<OkLab> centers;
-	centers.reserve((size_t)count);
+	//const double bandwidth = MeanShift::EstimateBandwith(colours);
 
-	KMeans::FirstCenter(colours, centers, removeDuplicates);
-	KMeans::SortColours(colours, centers, true);
-
-	Log::EndLine();
-	Log::WriteOneLine("Adding centers...");
-	Log::StartTime();
-	for (int i = 1; i < count; i++) {
-		KMeans::NewCenter(colours, centers);
-		KMeans::SortColours(colours, centers, false);
-
-		if (Log::CheckTimeSeconds(5.0)) {
-			const double process = ((double)i / (double)count) * 100;
-			std::string processStr = Log::ToString(process, 6);
-			processStr = Log::LeadingCharacter(processStr, 9);
-
-			Log::WriteOneLine("  " + processStr + "%");
-
-			Log::StartTime();
-		}
+	{
+		bool temp = true;
 	}
-
-	Log::EndLine();
-	Log::WriteOneLine("Before Movement");
-	Log::WriteOneLine("Centers Count: " + Log::ToString(centers.size()));
-	KMeans::SortColours(colours, centers, true);
-
-	Log::EndLine();
-	Log::WriteOneLine("Unmoved Centers");
-	for (size_t i = 0; i < centers.size(); i++) {
-		const sRGB srgb = OkLab::OkLabtosRGB(centers[i]);
-		const std::string hex = srgb.sRGBtoHex();
-		const std::string rgb = srgb.UintDebug();
-
-		Log::WriteOneLine("#" + hex + " - rgb(" + rgb + ")");
-	}
-
-	// -- Move Centers --
-
-	Log::EndLine();
-	Log::WriteOneLine("Moving Centers...");
-
-	unsigned int iterationCount = 0;
-	const std::string maxIterStr = Log::ToString(maxIter);
-
-	Log::StartTime();
-	while (true) {
-		iterationCount++;
-
-		KMeans::MoveCenters(colours, centers);
-
-		if (!KMeans::SortColours(colours, centers)) break;
-		if (iterationCount >= maxIter) break;
-
-		if (Log::CheckTimeSeconds(5.)) {
-			std::string progress = Log::ToString(iterationCount, (unsigned int)maxIterStr.size(), ' ');
-
-			Log::WriteOneLine("  Iteration Count: " + progress);
-			Log::StartTime();
-		}
-	}
-	Log::WriteOneLine("Took " + Log::ToString(iterationCount) + " iterations");
-
-	// ----- SAVE PALETTE FILE -----
-
-	Log::EndLine();
-	Log::WriteOneLine("After Movement");
-	std::string extraChange = KMeans::SortColours(colours, centers, true) ? "TRUE" : "FALSE";
-	if (KMeans::TestDebug) Log::WriteOneLine("Extra Change: " + extraChange);
-	Log::EndLine();
-
-	Log::WriteOneLine("Moved Centers");
-	for (size_t i = 0; i < centers.size(); i++) {
-		const sRGB srgb = OkLab::OkLabtosRGB(centers[i]);
-		const std::string hex = srgb.sRGBtoHex();
-		const std::string rgb = srgb.UintDebug();
-
-		Log::WriteOneLine("#" + hex + " - rgb(" + rgb + ")");
-	}
-	KMeans::SavePalette(GetFileNoExtension(imgLoc), centers);
 
 	return 0;
 }

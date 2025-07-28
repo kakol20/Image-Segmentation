@@ -23,12 +23,13 @@ add_executable (ImageSegmentation
   "src/colourSpace/OkLCh.cpp"
   "src/colourSpace/sRGB.hpp"
   "src/image/Image.cpp"
-  "src/kmeans/Colour.cpp"
-  "src/kmeans/KMeans.cpp"
+  "src/clustering/Colour.cpp"
+  "src/clustering/KMeans.cpp"
   "src/maths/Maths.hpp"
   "src/other/Log.cpp"
   "src/other/Random.cpp"
-  "src/main.cpp")
+  "src/main.cpp"
+  "src/clustering/MeanShift.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET ImageSegmentation PROPERTY CXX_STANDARD 20)

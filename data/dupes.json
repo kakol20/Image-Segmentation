@@ -2,5 +2,6 @@
 	"count": 32,
 	"seed": 1,
 	"maxIter": 10000,
-	"removeDuplicates": false
+	"removeDuplicates": false,
+	"tolerance": 0.001
 }

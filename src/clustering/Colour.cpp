@@ -92,3 +92,7 @@ void Colour::AddFrequency() {
 void Colour::SetSortMode(const Colour::SortMode mode) {
 	Colour::Mode = mode;
 }
+
+double Colour::LabDistance(const Colour& a, const Colour& b, const bool lightMode) {
+	return OkLab::Distance(a.m_lab, b.m_lab, lightMode);
+}

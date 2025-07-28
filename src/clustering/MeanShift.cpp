@@ -20,3 +20,19 @@ Colour MeanShift::ComputeMean(const std::vector<Colour>& colours, const Colour& 
 	sum.UpdateRGBFromLab();
 	return sum;
 }
+
+std::vector<Colour> MeanShift::MergeCenters(const std::vector<Colour>& centers, double tolerance) {
+	std::vector<Colour> merged;
+
+	for (const auto& c : centers) {
+		bool found = false;
+		for (const auto& m : merged) {
+			if (Colour::LabDistance(c, m) < tolerance) {
+				found = true;
+				break;
+			}
+		}
+		if (!found) merged.push_back(c);
+	}
+	return merged;
+}

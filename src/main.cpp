@@ -1,6 +1,8 @@
 ﻿#include <chrono>
 #include <fstream>
 #include <iostream>
+#include <map>
+#include <mutex>
 #include <sstream>
 #include <string>
 #include <thread>
@@ -22,10 +24,13 @@
 
 using json = nlohmann::json;
 
-const double Maths::Pi = 3.1415926535;
-const double Maths::Tau = 6.283185307;
-const double Maths::RadToDeg = 180. / Maths::Pi;
 const double Maths::DegToRad = Maths::Pi / 180.;
+const double Maths::Pi = 3.1415926535;
+const double Maths::RadToDeg = 180. / Maths::Pi;
+const double Maths::Tau = 6.283185307;
+int MeanShift::m_progress = 0;
+std::mutex MeanShift::m_mutex;
+std::map<std::thread::id, bool> MeanShift::m_threadStatus;
 
 std::string GetFileExtension(const std::string loc);
 std::string GetFileNoExtension(const std::string loc);
@@ -95,7 +100,7 @@ int Run(int argc, char* argv[]) {
 	}
 #else
 	jsonLoc = "data/dupes.json";
-	imgLoc = "data/rubik.png";
+	imgLoc = "data/suzanne.png";
 #endif
 
 	Log::WriteOneLine("Image: " + imgLoc);

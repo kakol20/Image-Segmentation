@@ -1,9 +1,0 @@
-{
-	"count": 32,
-	"seed": 1,
-	"maxIter": 10000,
-	"removeDuplicates": false,
-	"tolerance": 0.01,
-	"bandwidth": 0.2,
-	"strictCount": true
-}

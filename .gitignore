@@ -1,7 +1,7 @@
 /.vs
 /bin
 /out
-/x64
-*.user
 *.log
-*.log
+*.aps
+*.vcxproj.user
+*.lnk

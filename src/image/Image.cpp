@@ -95,7 +95,7 @@ Image::ImageType Image::GetFileType(const char* file) {
 }
 
 bool Image::Read(const char* file, const int forceChannels) {
-	if (GetFileType(file) == ImageType::NA) {
+	if (!ValidFileType(file)) {
 		Log::WriteOneLine("Invalid file type");
 		return false;
 	}
@@ -173,6 +173,11 @@ bool Image::Write(const char* file) const {
 	Log::EndLine();
 
 	return success != 0;
+}
+
+bool Image::ValidFileType(const char* file) {
+	if (GetFileType(file) == ImageType::NA) return false;
+	return true;
 }
 
 size_t Image::GetIndex(const int x, const int y) const {

@@ -19,6 +19,8 @@ public:
 	bool Read(const char* file, const int forceChannels = 0);
 	bool Write(const char* file) const;
 
+	static bool ValidFileType(const char* file);
+
 	inline int GetChannels() const { return m_channels; };
 	inline size_t GetSize() const { return m_size; };
 

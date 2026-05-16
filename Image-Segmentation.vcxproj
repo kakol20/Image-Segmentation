@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{9953958d-d13c-4d58-8d48-10231750510f}</ProjectGuid>
-    <RootNamespace>ImageSegmentation</RootNamespace>
+    <ProjectGuid>{617950b8-bde2-4ceb-82a3-1b3d098bb35d}</ProjectGuid>
+    <RootNamespace>Image-Segmentation</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -70,21 +70,25 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)\out\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>bin\$(ShortProjectName)\$(Platform)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)\out\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>bin\$(ShortProjectName)\$(Platform)\$(Configuration)\</IntDir>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)\out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>bin\$(ShortProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName).$(Platform)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)\out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>bin\$(ShortProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName).$(Platform)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)\out\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>bin\$(ShortProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName).$(Platform)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)\out\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>bin\$(ShortProjectName)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName).$(Platform)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -147,13 +151,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\other\Random.cpp" />
-    <ClCompile Include="src\other\Log.cpp" />
+    <ClCompile Include="src\image\Image.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\wrapper\Log.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\other\Random.h" />
-    <ClInclude Include="src\other\Log.h" />
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ext\stb\stb_image.h" />
+    <ClInclude Include="ext\stb\stb_image_write.h" />
+    <ClInclude Include="res\resource.h" />
+    <ClInclude Include="src\image\Image.h" />
+    <ClInclude Include="src\wrapper\Log.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="res\Image-Segmentation.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

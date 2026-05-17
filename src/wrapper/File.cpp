@@ -1,8 +1,7 @@
 #include "File.h"
 
-#include <iostream>
-#include <string>
 #include <filesystem>
+#include <string>
 
 std::string File::Extension(const std::string loc) {
 	std::filesystem::path fs = loc;

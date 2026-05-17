@@ -1,8 +1,8 @@
 #include "image/Image.h"
+#include "wrapper/File.h"
 #include "wrapper/Log.h"
 #include <cstdlib>
 #include <string>
-#include "wrapper/File.h"
 
 int main(int argc, char* argv[]) {
 	Log::WriteOneLine("argc: " + Log::ToString(argc));

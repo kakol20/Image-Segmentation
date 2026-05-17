@@ -1,5 +1,7 @@
 #include "Random.h"
 
+#include <chrono>
+
 unsigned int Random::Seed = 1;
 unsigned int Random::MaxRand = ~0;
 
@@ -21,4 +23,27 @@ unsigned int Random::RandUInt(unsigned int min, unsigned int max) {
 
 	const unsigned int delta = (max - min) + 1;
 	return (Random::Rand() % delta) + min;
+}
+
+double Random::RandDouble(double min, double max) {
+	//const unsigned int RAND_MAX = ~0;
+	const unsigned int rand = Random::Rand();
+
+	const double range = max - min;
+
+	return ((double(rand) / double(Random::MaxRand)) * range) + min;
+}
+
+void Random::EpochSeed() {
+	auto now = std::chrono::system_clock::now();
+	auto epoch = now.time_since_epoch();
+	auto sec = std::chrono::duration_cast<std::chrono::seconds>(epoch).count();
+
+	Random::Seed = (unsigned int)sec;
+
+#ifdef _DEBUG
+	{
+		bool breakpoint = true;
+	}
+#endif // _DEBUG
 }

@@ -3,9 +3,10 @@
 #include <chrono>
 #include <ctime>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
-#include <iomanip>
+#include <thread>
 
 std::string Log::m_console = "";
 std::chrono::steady_clock::time_point Log::m_time = std::chrono::high_resolution_clock::now();
@@ -167,4 +168,15 @@ std::string Log::LeadingCharacter(const std::string value, const unsigned int am
 		}
 	}
 	return out;
+}
+
+void Log::Sound(const long long duration) {
+	std::cout << '\a';
+	
+	if (duration > 0) std::this_thread::sleep_for(std::chrono::seconds(duration));
+}
+
+void Log::HoldConsole() {
+	std::cout << "\nPress any key to exit...";
+	std::cin.ignore();
 }

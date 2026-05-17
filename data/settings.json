@@ -1,3 +1,5 @@
 {
-	"test": true
+	"bandwidth": 0.05,
+	"epsilon": 0.01,
+	"max": -1
 }
